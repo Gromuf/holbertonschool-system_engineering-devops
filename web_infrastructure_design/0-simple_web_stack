@@ -1,0 +1,67 @@
+# 0. Simple Web Stack
+
+## Description
+A lot of websites are powered by simple web infrastructure, which often consists of a single server with a LAMP stack. This document describes a simple one-server web infrastructure to host a website accessible via `www.foobar.com`. The explanation begins with a user accessing the website and covers the roles of each component and potential issues with this setup.
+
+---
+
+## Requirements
+
+### Components Used
+- **1 Server**
+- **1 Web Server**: Nginx
+- **1 Application Server**
+- **1 Application Files**: The codebase for the application
+- **1 Database**: MySQL
+- **1 Domain Name**: `foobar.com` configured with a `www` record that points to the server IP `8.8.8.8`
+
+---
+
+## Explanation of Components
+
+### What is a Server?
+A server is a physical or virtual machine that provides resources, services, or data to other computers (clients) over a network. In this setup, the server hosts the entire web stack, including the web server, application server, and database.
+
+### Role of the Domain Name
+A domain name, such as `foobar.com`, maps a human-readable address to the server's IP address (e.g., `8.8.8.8`) using the Domain Name System (DNS). This allows users to access the website without needing to remember the server’s IP address.
+
+### Type of DNS Record for `www` in `www.foobar.com`
+The `www` in `www.foobar.com` is typically an **A (Address) record**, which maps the `www` subdomain to the IP address of the server.
+
+### Role of the Web Server
+The web server (Nginx) handles incoming HTTP/HTTPS requests from users. It serves static content (HTML, CSS, JavaScript) and forwards dynamic requests to the application server for further processing.
+
+### Role of the Application Server
+The application server processes dynamic requests by executing the application code (e.g., business logic). It interacts with the database to retrieve or update data as required and returns the results to the web server.
+
+### Role of the Database
+The database (MySQL) stores and manages structured data for the application, such as user profiles, posts, or settings. It enables data retrieval and storage for the application server.
+
+### Communication Between Server and User
+The server communicates with the user’s computer via the HTTP/HTTPS protocol. The web server sends responses (e.g., web pages) to the user’s browser over a TCP connection.
+
+---
+
+## Issues with This Infrastructure
+
+### Single Point of Failure (SPOF)
+If the single server fails, the entire website becomes unavailable, leading to downtime.
+
+### Downtime During Maintenance
+Tasks such as deploying new code or restarting the web server require downtime, as there is no redundancy in the infrastructure.
+
+### Scalability Issues
+This infrastructure cannot handle a high volume of traffic due to the limited resources (CPU, memory, storage) of a single server. Additional traffic will overwhelm the server, causing performance degradation or downtime.
+
+---
+
+## Diagram
+Below is a diagram illustrating the simple web stack:
+
+![Simple Web Stack](./simple_web_stack.png)
+
+---
+
+## Conclusion
+This simple web stack is a basic infrastructure suitable for small-scale applications. However, it has significant limitations in terms of redundancy, maintenance, and scalability. Future improvements can include load balancing, replication, and adding multiple servers to address these issues.
+
