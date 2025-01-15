@@ -1,0 +1,112 @@
+# 1. Distributed Web Infrastructure
+
+## Description
+
+This task involves designing a distributed web infrastructure with three servers to host the website `www.foobar.com`. This infrastructure improves upon the simple web stack by addressing scalability, redundancy, and load balancing.
+
+---
+
+## Requirements
+
+### Components Used
+
+- **3 Servers**:
+  - 1 Load Balancer: HAProxy
+  - 1 Web Server: Nginx
+  - 1 Application Server
+  - 1 Database: MySQL
+- **1 Set of Application Files**: Codebase for the application
+- **1 Domain Name**: `foobar.com`
+
+---
+
+## Explanation of Components
+
+### Why Add These Additional Elements?
+
+1. **Load Balancer (HAProxy)**:
+
+   - **Purpose**: Distributes incoming traffic among multiple servers to ensure scalability and high availability.
+   - **Benefits**: Prevents any single server from becoming overwhelmed and provides redundancy if one server fails.
+
+2. **Web Server (Nginx)**:
+
+   - Handles HTTP/HTTPS requests and serves static files. With multiple servers, the web server’s workload is distributed, improving performance.
+
+3. **Database Replication (Primary-Replica)**:
+   - **Purpose**: Adds redundancy and improves database performance by offloading read operations to the replica node.
+   - **Benefits**: Reduces the load on the primary database and ensures data availability in case of failure.
+
+---
+
+### Load Balancer Configuration
+
+1. **Distribution Algorithm**:
+
+   - Configured with the **Round-Robin** algorithm. This algorithm distributes incoming traffic evenly across all backend servers by sending each new request to the next server in the list.
+
+2. **Active-Active vs. Active-Passive Setup**:
+   - **Active-Active**:
+     - Both servers handle traffic simultaneously, improving resource utilization and redundancy.
+     - If one server fails, the other continues handling traffic seamlessly.
+   - **Active-Passive**:
+     - One server is active and handles all traffic, while the other remains idle as a standby.
+     - The passive server takes over only if the active server fails.
+   - **Chosen Setup**: Active-Active, as it maximizes resource usage and provides better load distribution.
+
+---
+
+### Database Primary-Replica Cluster
+
+1. **How It Works**:
+
+   - The Primary (Master) node handles all write operations and replicates data to the Replica (Slave) node.
+   - The Replica node handles read operations, reducing the load on the Primary node.
+
+2. **Differences Between Primary and Replica Nodes**:
+   - **Primary Node**:
+     - Handles all write operations.
+     - Ensures data consistency and replicates changes to the Replica.
+   - **Replica Node**:
+     - Handles read-only queries.
+     - Keeps a synchronized copy of the data but cannot perform write operations.
+
+---
+
+## Issues with This Infrastructure
+
+### Single Points of Failure (SPOF)
+
+- **Load Balancer**:
+  - If the load balancer fails, the entire system becomes inaccessible.
+  - Solution: Add a backup load balancer in an Active-Passive configuration.
+
+### Security Issues
+
+1. **No Firewall**:
+
+   - The system lacks protection against unauthorized access or attacks.
+   - Solution: Implement a firewall to filter incoming traffic.
+
+2. **No HTTPS**:
+   - Communication between the client and server is not encrypted, making it vulnerable to interception.
+   - Solution: Enable HTTPS using SSL/TLS certificates.
+
+### Lack of Monitoring
+
+- **Issue**: There is no system to monitor server performance, application health, or traffic.
+- **Solution**: Implement monitoring tools (e.g., Prometheus, Grafana) to track metrics and detect issues proactively.
+
+---
+
+## Diagram
+
+Below is a diagram illustrating the distributed web infrastructure:
+
+![Distributed Web Infrastructure](distributed_web_infrastructure.png)
+
+---
+
+## Conclusion
+
+This distributed web infrastructure addresses the limitations of the simple web stack by introducing load balancing, redundancy, and database replication. However, it still has some potential points of failure and security concerns that need to be addressed in future iterations.
