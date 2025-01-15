@@ -1,0 +1,72 @@
+# Application Server vs Web Server
+
+## Description
+This task involves designing an infrastructure where components are split into separate servers for better scalability and modularity. Additionally, it introduces a second Load Balancer to form a cluster with the existing one, improving high availability and fault tolerance.
+
+---
+
+## Requirements
+
+### Components Added
+1. **1 Additional Server**:
+   - Dedicated to hosting the database or application server to isolate responsibilities.
+
+2. **1 Load Balancer (HAProxy)**:
+   - Configured as a cluster with the existing load balancer.
+   - Ensures fault tolerance and high availability by sharing the load and providing a failover mechanism.
+
+3. **Split Components**:
+   - Separate servers for:
+     - **Web Server**: Handles HTTP/HTTPS requests and serves static files.
+     - **Application Server**: Executes the application logic and processes dynamic content.
+     - **Database Server**: Manages data storage and retrieval.
+
+---
+
+## Explanation of the Infrastructure
+
+### Why Add These Elements?
+1. **Load Balancer Cluster**:
+   - **Purpose**: Ensures availability of the load balancing service.
+   - **Benefit**: If one load balancer fails, the other takes over without service interruption.
+   - **How It Works**: Configured in an Active-Passive setup using tools like Keepalived or VRRP for failover.
+
+2. **Split Components**:
+   - **Web Server**:
+     - Serves static content (e.g., HTML, CSS, JavaScript).
+     - Relieves the application server of tasks that don’t require dynamic processing.
+   - **Application Server**:
+     - Handles business logic and processes dynamic content (e.g., user login, database queries).
+     - Reduces the load on the web server by focusing on application-specific tasks.
+   - **Database Server**:
+     - Centralizes data management, allowing for better optimization and performance monitoring.
+     - Keeps data isolated from application and web servers for improved security.
+
+---
+
+## Infrastructure Diagram
+Below is the logical flow:
+
+1. User requests reach the **Load Balancer Cluster**.
+2. The active load balancer directs traffic to:
+   - The **Web Server** for static files.
+   - The **Application Server** for dynamic content processing.
+3. The **Application Server** communicates with the **Database Server** for data operations.
+
+---
+
+## Benefits of the Split Architecture
+1. **Improved Scalability**:
+   - Each layer can be scaled independently based on demand (e.g., add more web servers for high traffic).
+2. **Better Performance**:
+   - Specialized roles allow servers to focus on their specific tasks.
+3. **Fault Tolerance**:
+   - Load Balancer clustering ensures uptime even if one load balancer fails.
+4. **Security**:
+   - Isolating the database server reduces the attack surface.
+
+---
+
+## Conclusion
+By splitting the components into dedicated servers and configuring a clustered load balancer, this architecture is robust, scalable, and fault-tolerant. This design addresses challenges in handling large-scale applications while maintaining reliability and security.
+
