@@ -1,0 +1,100 @@
+# 2. Secured Three-Server Web Infrastructure
+
+## Description
+This task involves designing a secured, monitored three-server web infrastructure for hosting `www.foobar.com`. The setup ensures encrypted traffic (HTTPS), implements firewalls for security, and uses monitoring clients for observability and performance tracking.
+
+---
+
+## Requirements
+
+### Additional Components
+1. **3 Firewalls**:
+   - Placed at strategic points to filter and control traffic:
+     - Between the internet and the Load Balancer.
+     - Between the Load Balancer and backend servers.
+     - Between backend servers and the database.
+
+2. **1 SSL Certificate**:
+   - To serve the website over HTTPS, ensuring encrypted communication.
+
+3. **3 Monitoring Clients**:
+   - Installed on the Load Balancer, Web Server, and Database Server.
+   - Used to collect data for monitoring tools such as Sumologic, Prometheus, or similar.
+
+---
+
+## Explanation of Components
+
+### Why Add These Elements?
+1. **Firewalls**:
+   - Protect the system by filtering unwanted traffic and preventing unauthorized access.
+   - Each firewall controls traffic flow between specific segments of the infrastructure:
+     - Public access is filtered before reaching the Load Balancer.
+     - Backend communication is protected to avoid lateral attacks.
+
+2. **SSL Certificate**:
+   - Ensures that all communication between the user and the web server is encrypted, providing confidentiality and protecting against man-in-the-middle (MITM) attacks.
+   - Improves user trust and complies with modern web standards.
+
+3. **Monitoring Clients**:
+   - Continuously collect metrics and logs for the infrastructure’s performance and health.
+   - Useful for proactive issue detection and troubleshooting.
+
+---
+
+### What Are Firewalls For?
+- Firewalls filter incoming and outgoing traffic based on predefined rules.
+- They protect the infrastructure by blocking malicious traffic and only allowing legitimate requests.
+
+### Why Serve Traffic Over HTTPS?
+- Encrypts data in transit, ensuring it cannot be intercepted by third parties.
+- Provides authenticity by verifying the website’s identity through the SSL certificate.
+- Required for many modern web features and SEO advantages.
+
+### What is Monitoring Used For?
+- Tracks system health, resource usage, and application performance.
+- Alerts administrators about potential issues before they become critical.
+- Ensures uptime and helps analyze trends for scaling decisions.
+
+### How Does the Monitoring Tool Collect Data?
+- Monitoring clients on each server collect metrics (CPU, memory, disk usage, etc.), logs, and application performance data.
+- Data is sent to a centralized monitoring platform (e.g., Sumologic, Prometheus) for analysis and visualization.
+
+### Monitoring Web Server QPS (Queries Per Second)
+- Use the monitoring client to track HTTP request rates on the web server.
+- Configure the monitoring tool to visualize QPS trends and set up alerts if thresholds are exceeded.
+
+---
+
+## Issues with This Infrastructure
+
+### SSL Termination at the Load Balancer Level
+- **Problem**:
+  - Terminating SSL at the Load Balancer means traffic between the Load Balancer and backend servers is not encrypted.
+- **Solution**:
+  - Use end-to-end encryption, where SSL is terminated at the backend servers instead of the Load Balancer.
+
+### Single MySQL Server for Writes
+- **Problem**:
+  - A single Primary (write-capable) database server is a bottleneck and a potential single point of failure (SPOF).
+- **Solution**:
+  - Implement database clustering or distributed systems (e.g., MySQL Group Replication).
+
+### Servers with All Components
+- **Problem**:
+  - Mixing roles (database, web server, application server) on the same machine reduces isolation and makes scaling difficult.
+- **Solution**:
+  - Separate the roles to dedicated servers, enabling easier scaling and better performance management.
+
+---
+
+## Diagram
+Below is a diagram illustrating the secured, monitored three-server web infrastructure:
+
+![Secure Three-Server Infrastructure](secure_three_server_infrastructure.png)
+
+---
+
+## Conclusion
+This design incorporates security, encryption, and monitoring, making the web infrastructure more robust and reliable. However, further improvements can address some of the remaining issues, such as database replication and role separation for optimized scalability.
+
